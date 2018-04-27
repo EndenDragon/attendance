@@ -108,7 +108,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js" integrity="sha256-iaqfO5ue0VbSGcEiQn+OeXxnxAMK2+QgHXIDA5bWtGI=" crossorigin="anonymous"></script>
-    
+
     <script>
       function signin_submit(session, password) {
           var url = "signin.php";
@@ -120,7 +120,7 @@
           });
           return funct.promise();
       }
-      
+
       function sessions_get(session) {
           var url = "sessions.php";
           var funct = $.ajax({
@@ -188,10 +188,10 @@
               location.reload();
             });
           });
-          
+
             $("#admin-session-select").change(generateSessionTable);
             $("#admin-session-refresh").click(generateSessionTable);
-            
+
             function generateSessionTable() {
                 var session = $("#admin-session-select option:selected").val();
                 var sess = sessions_get(session);
@@ -204,6 +204,7 @@
                         var rendered = Mustache.render(template, {"id": disdata.id, "netid": disdata.netid, "timestamp": disdata.timestamp});
                         $("#admin-members-table").append(rendered);
                     }
+                    $("#admin-session-member-count").html(data.length);
                 });
             }
         }

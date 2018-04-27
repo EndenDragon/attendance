@@ -32,6 +32,7 @@
       </thead>
       <tbody id="admin-members-table"></tbody>
     </table>
+    <p>Count: <span id="admin-session-member-count"></span></p>
   </div>
   <div class="col s12">
     <p class="flow-text">Add or edit sessions</p>
