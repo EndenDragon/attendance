@@ -15,8 +15,10 @@
   $password = $_POST["password"];
   $uwnetid = $_SERVER["REMOTE_USER"];
 
-  $sql_query = "SELECT identifier, password, start, end FROM sessions WHERE identifier = '$session'";
-  $result_set = $database->query($sql_query);
+  $sql_query = "SELECT identifier, password, start, end FROM sessions WHERE identifier = :session";
+  $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+  $sql_query->execute(array(":session" => $session));
+  $result_set = $sql_query->fetchAll();
   $data = [];
   foreach ($result_set as $row) {
     $id_row = [
@@ -44,8 +46,10 @@
     die_and_error("Attendance for $session is closed.");
   }
   
-  $sql_query = "SELECT id FROM records WHERE netid = '$uwnetid' AND session = '$session'";
-  $result_set = $database->query($sql_query);
+  $sql_query = "SELECT id FROM records WHERE netid = :uwnetid AND session = :session";
+  $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+  $sql_query->execute(array(":uwnetid" => $uwnetid, ":session" => $session));
+  $result_set = $sql_query->fetchAll();
   $data = [];
   foreach ($result_set as $row) {
       $id_row = [
@@ -58,7 +62,9 @@
       die_and_error("You have already signed in.");
   }
   
-  $sql_query = "INSERT INTO records (netid, session, timestamp) VALUES ('$uwnetid', '$session', '$now')";
-  $database->query($sql_query);
+  $sql_query = "INSERT INTO records (netid, session, timestamp) VALUES (:uwnetid, :session, :now)";
+  $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+  $sql_query->execute(array(":uwnetid"=>$uwnetid, ":session"=>$session, ":now"=>$now));
+  $result_set = $sql_query->fetchAll();
   header('HTTP/1.1 204 No Content');
 ?>

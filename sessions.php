@@ -10,8 +10,10 @@
   }
 
   $session = $_GET["session"];
-  $sql_query = "SELECT id, netid, session, timestamp FROM records WHERE session = '$session' ORDER BY netid";
-  $result_set = $database->query($sql_query);
+  $sql_query = "SELECT id, netid, session, timestamp FROM records WHERE session = :session ORDER BY netid";
+  $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+  $sql_query->execute(array(":session" => $session));
+  $result_set = $sql_query->fetchAll();
   $json_data = [];
 
   foreach ($result_set as $row) {

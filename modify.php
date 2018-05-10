@@ -38,8 +38,10 @@
   $start = DateTime::createFromFormat("j F, Y H:i", "$startdate $starttime")->format('Y-m-d H:i:s');
   $end = DateTime::createFromFormat("j F, Y H:i", "$enddate $endtime")->format('Y-m-d H:i:s');
 
-  $sql_query = "SELECT identifier FROM sessions WHERE identifier = '$name'";
-  $result_set = $database->query($sql_query);
+  $sql_query = "SELECT identifier FROM sessions WHERE identifier = :name";
+  $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+  $sql_query->execute(array(":name" => $name));
+  $result_set = $sql_query->fetchAll();
   $data = [];
 
   foreach ($result_set as $row) {
@@ -49,9 +51,15 @@
     $data[]= $id_row;
   }
   if (sizeof($data) > 0) {
-    $database->query("UPDATE sessions SET password='$password', start='$start', end='$end' WHERE identifier = '$name'");
+    $sql_query = "UPDATE sessions SET password=:password, start=:start, end=:end WHERE identifier = :name";
+    $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $sql_query->execute(array(":password"=>$password, ":start"=>$start, ":end"=>$end, ":name"=>$name));
+    $result_set = $sql_query->fetchAll();
   } else {
-    $database->query("INSERT INTO sessions (identifier, password, start, end) VALUES ('$name', '$password', '$start', '$end')");
+    $sql_query = "INSERT INTO sessions (identifier, password, start, end) VALUES (:name, :password, :start, :end)";
+    $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $sql_query->execute(array(":password"=>$password, ":start"=>$start, ":end"=>$end, ":name"=>$name));
+    $result_set = $sql_query->fetchAll();
   }
   header('HTTP/1.1 204 No Content');
 ?>
