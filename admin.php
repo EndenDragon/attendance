@@ -19,6 +19,7 @@
       </select>
       <label>Session</label>
       <a class="waves-effect waves-light btn" id="admin-session-refresh">Refresh</a>
+      <a class="waves-effect waves-light btn" id="admin-session-canvas-submit" disabled>Submit to Canvas</a>
     </div>
   </div>
   <div class="col s12">
@@ -95,4 +96,35 @@
 
     </tbody>
   </table>
+</div>
+
+
+<div id="canvas-submit-modal" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <h4>Submit to Canvas: <span id="canvas-submit-sessionname"></span></h4>
+    <p class="flow-text">Submitting to <strong id="canvas-submit-coursename"></strong></p>
+    <div class="input-field col s12 m6">
+      <select id="canvas-submit-assignments-list">
+        <option value="" disabled selected>Choose an assignment</option>
+      </select>
+    </div>
+    <div>
+      <p class="flow-text">Manage Grades for signed in members</p>
+      <table class="bordered striped">
+          <thead>
+              <tr>
+                  <th>UWNetID</th>
+                  <th>Grade</th>
+              </tr>
+          </thead>
+          <tbody id="canvas-submit-members-table">
+          </tbody>
+      </table>
+      <hr>
+      <a class="waves-effect waves-light btn" id="canvas-submit-send" disabled>Send to Canvas</a>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat ">Close</a>
+  </div>
 </div>
