@@ -108,8 +108,41 @@
         <option value="" disabled selected>Choose an assignment</option>
       </select>
     </div>
+    <p class="red-text loading-msg">* Loading Course Assignments, please wait...</p>
     <div>
       <p class="flow-text">Manage Grades for signed in members</p>
+      <table>
+      	<thead>
+      		<tr>
+      			<td></td>
+      			<td>Pass/Fail</td>
+      			<td>Numerical</td>
+      			<td>Regenerate Students Table</td>
+      		</tr>
+      	</thead>
+      	<tbody>
+      		<tr>
+      			<td>Default Grade</td>
+				<td>
+				  <div class="switch">
+				      <label>
+				          Incomplete
+				          <input type="checkbox" checked=checked id="admin_canvas_default_passfail">
+				          <span class="lever"></span> Complete
+				      </label>
+				  </div>
+				</td>
+				<td>
+				  <div class="input-field inline">
+				      <input placeholder="Grade" value="2" id="admin_canvas_default_grade">
+				  </div>
+				</td>
+				<td>
+					<a class="waves-effect waves-light btn" id="admin_canvas_default_refresh">Refresh</a>
+				</td>
+      		</tr>
+      	</tbody>
+      </table>
       <table class="bordered striped">
           <thead>
               <tr>

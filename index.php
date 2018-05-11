@@ -237,6 +237,7 @@
             $("#admin-session-select").change(generateSessionTable);
             $("#admin-session-refresh").click(generateSessionTable);
             $("#canvas-submit-assignments-list").change(generateSubmitCanvasTable);
+            $("#admin_canvas_default_refresh").click(generateSubmitCanvasTable);
             $("#canvas-submit-send").click(sendToCanvas);
 
             function generateSessionTable() {
@@ -260,13 +261,18 @@
 
             function generateSubmitCanvasTable() {
               var assignmentGradingType = $("#canvas-submit-assignments-list option:selected").attr("data-grading-type");
+              if (!assignmentGradingType) {
+                return;
+              }
+              var defaultGrade = $("#admin_canvas_default_grade").val();
+              var defaultCheckedPassFail = $("#admin_canvas_default_passfail").prop('checked');
               var assignmentIsPassFail = assignmentGradingType == "pass_fail";
               $("#canvas-submit-send").attr("disabled", false);
               $("#canvas-submit-members-table").html("");
               var template = $('#mustache_adminCanvasMembersTable').html();
               Mustache.parse(template);
               for (var i = 0; i < signedInNetIDs.length; i++) {
-                var rendered = Mustache.render(template, {"netid": signedInNetIDs[i], "pass_fail": assignmentIsPassFail});
+                var rendered = Mustache.render(template, {"netid": signedInNetIDs[i], "pass_fail": assignmentIsPassFail, "defaultGrade": defaultGrade, "defaultCheckedPassFail": defaultCheckedPassFail});
                 $("#canvas-submit-members-table").append(rendered);
               }
             }
@@ -324,6 +330,7 @@
                   $("#canvas-submit-assignments-list").append(rendered);
                 }
                 $('select').material_select();
+                $("#canvas-submit-modal .loading-msg").hide();
               });
               var listCourseStudentsAjax = canvas_list_users();
               listCourseStudentsAjax.done(function (data) {
@@ -356,7 +363,7 @@
               <div class="switch">
                   <label>
                       Incomplete
-                      <input type="checkbox" checked=checked>
+                      <input type="checkbox" {{#defaultCheckedPassFail}}checked=checked{{/defaultCheckedPassFail}}>
                       <span class="lever"></span> Complete
                   </label>
               </div>
@@ -365,7 +372,7 @@
           {{^pass_fail}}
           <td>
               <div class="input-field inline">
-                  <input placeholder="Grade" value="2">
+                  <input placeholder="Grade" value="{{ defaultGrade }}">
               </div>
           </td>
           {{/pass_fail}}
