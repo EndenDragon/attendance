@@ -161,6 +161,16 @@
         });
         return funct.promise();
       }
+      
+      function canvas_list_sections() {
+        var url = "canvas.php?action=list_sections";
+        var funct = $.ajax({
+            dataType: "json",
+            url: url,
+            method: "GET"
+        });
+        return funct.promise();
+      }
 
       function canvas_post_grade(assignment_id, posted_grade) {
           var url = "canvas.php?action=post_grade";
@@ -212,7 +222,8 @@
 
         if (adminEnabled) {
           var signedInNetIDs = [];
-          var courseStudents = [];
+          var courseStudents = {};
+          var courseSections = {};
 
           $("#admin-update-session-btn").click(function () {
             var name = $("#admin-name-field").val();
@@ -237,6 +248,7 @@
             $("#admin-session-select").change(generateSessionTable);
             $("#admin-session-refresh").click(generateSessionTable);
             $("#canvas-submit-assignments-list").change(generateSubmitCanvasTable);
+            $("#canvas-submit-sections-list").change(generateSubmitCanvasTable);
             $("#admin_canvas_default_refresh").click(generateSubmitCanvasTable);
             $("#canvas-submit-send").click(sendToCanvas);
 
@@ -274,6 +286,21 @@
               for (var i = 0; i < signedInNetIDs.length; i++) {
                 var rendered = Mustache.render(template, {"netid": signedInNetIDs[i], "pass_fail": assignmentIsPassFail, "defaultGrade": defaultGrade, "defaultCheckedPassFail": defaultCheckedPassFail});
                 $("#canvas-submit-members-table").append(rendered);
+              }
+              var sectionNetIDs = [];
+              var sectionID = $("#canvas-submit-sections-list option:selected").val();
+              if (sectionID == "") {
+                  return;
+              }
+              var sectionStudents = courseSections[sectionID].students;
+              defaultGrade = $("#admin_canvas_default_unlogged_grade").val();
+              defaultCheckedPassFail = $("#admin_canvas_default_unlogged_passfail").prop('checked');
+              for (var i = 0; i < sectionStudents.length; i++) {
+                  var netid = sectionStudents[i].login_id;
+                  if (!signedInNetIDs.includes(netid)) {
+                      var rendered = Mustache.render(template, {"netid": netid, "pass_fail": assignmentIsPassFail, "defaultGrade": defaultGrade, "defaultCheckedPassFail": defaultCheckedPassFail});
+                      $("#canvas-submit-members-table").append(rendered);
+                  }
               }
             }
 
@@ -330,7 +357,7 @@
                   $("#canvas-submit-assignments-list").append(rendered);
                 }
                 $('select').material_select();
-                $("#canvas-submit-modal .loading-msg").hide();
+                $("#loading-course-msg").hide();
               });
               var listCourseStudentsAjax = canvas_list_users();
               listCourseStudentsAjax.done(function (data) {
@@ -339,6 +366,25 @@
                   var student = data[i];
                   courseStudents[student.login_id] = student.id;
                 }
+                var listCourseSectionsAjax = canvas_list_sections();
+                listCourseSectionsAjax.done(function (dat) {
+                    $("#loading-section-msg").hide();
+                    var template = $('#mustache_adminCanvasSectionOption').html();
+                    Mustache.parse(template);
+                    $("#canvas-submit-sections-list > option:not(:first-child)").remove();
+                    for (var i = 0; i < dat.length; i++) {
+                        var dissec = dat[i];
+                        for (var j = dissec.students.length - 1; j >= 0; j--) {
+                            if (!courseStudents[dissec.students[j].login_id]) {
+                                dissec.students.splice(j, 1);
+                            }
+                        }
+                        courseSections[dissec.id] = dissec;
+                        var rendered = Mustache.render(template, dissec);
+                        $("#canvas-submit-sections-list").append(rendered);
+                    }
+                    $('select').material_select();
+                });
               });
             }
         }
@@ -354,6 +400,9 @@
     </script>
     <script id="mustache_adminCanvasAssignmentOption" type="text/template">
       <option value="{{ id }}" data-grading-type="{{ grading_type }}">{{ name }}</option>
+    </script>
+    <script id="mustache_adminCanvasSectionOption" type="text/template">
+      <option value="{{ id }}">{{ name }}</option>
     </script>
     <script id="mustache_adminCanvasMembersTable" type="text/template">
       <tr data-netid="{{ netid }}">

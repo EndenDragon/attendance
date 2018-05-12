@@ -108,21 +108,27 @@
         <option value="" disabled selected>Choose an assignment</option>
       </select>
     </div>
-    <p class="red-text loading-msg">* Loading Course Assignments, please wait...</p>
+    <p id="loading-course-msg" class="red-text">* Loading Course Assignments, please wait...</p>
+    <p>Populate additional students from a chosen section:</p>
+    <div class="input-field col s12 m6">
+      <select id="canvas-submit-sections-list">
+        <option value="" selected>No section</option>
+      </select>
+    </div>
+    <p id="loading-section-msg" class="red-text">* Loading Course Sections, please wait...</p>
     <div>
-      <p class="flow-text">Manage Grades for signed in members</p>
+      <p class="flow-text">Manage Grades for the assignment</p>
       <table>
       	<thead>
       		<tr>
-      			<td></td>
+      			<td>Default Grade</td>
       			<td>Pass/Fail</td>
       			<td>Numerical</td>
-      			<td>Regenerate Students Table</td>
       		</tr>
       	</thead>
       	<tbody>
       		<tr>
-      			<td>Default Grade</td>
+      			<td>Signed in Members</td>
 				<td>
 				  <div class="switch">
 				      <label>
@@ -137,12 +143,27 @@
 				      <input placeholder="Grade" value="2" id="admin_canvas_default_grade">
 				  </div>
 				</td>
+      		</tr>
+      		<tr>
+      			<td>Section Members not signed in</td>
 				<td>
-					<a class="waves-effect waves-light btn" id="admin_canvas_default_refresh">Refresh</a>
+				  <div class="switch">
+				      <label>
+				          Incomplete
+				          <input type="checkbox" id="admin_canvas_default_unlogged_passfail">
+				          <span class="lever"></span> Complete
+				      </label>
+				  </div>
+				</td>
+				<td>
+				  <div class="input-field inline">
+				      <input placeholder="Grade" value="0" id="admin_canvas_default_unlogged_grade">
+				  </div>
 				</td>
       		</tr>
       	</tbody>
       </table>
+      <a class="waves-effect waves-light btn" id="admin_canvas_default_refresh">Use Defaults</a>
       <table class="bordered striped">
           <thead>
               <tr>

@@ -18,7 +18,9 @@
 	        show_course();
 	    } else if ($action == "list_users") {
 	        list_users();
-	    } else if ($action == "list_assignments") {
+	    } else if ($action == "list_sections") {
+            list_sections();
+        } else if ($action == "list_assignments") {
     		list_assignments();
 	    } else {
 	        die_and_error("invalid action provided");
@@ -55,6 +57,12 @@
 		}
 	    echo json_encode($result, JSON_PRETTY_PRINT);
 	}
+    
+    // List all the sections in the course
+    function list_sections() {
+        $result = call_canvas_url("GET", "sections", array("include[]" => "students"));
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
 
 	// List all the assignments in the course
 	function list_assignments() {
