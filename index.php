@@ -374,6 +374,7 @@
                     $("#canvas-submit-sections-list > option:not(:first-child)").remove();
                     for (var i = 0; i < dat.length; i++) {
                         var dissec = dat[i];
+                        if (!dissec.students) { dissec.students = []; };
                         for (var j = dissec.students.length - 1; j >= 0; j--) {
                             if (!courseStudents[dissec.students[j].login_id]) {
                                 dissec.students.splice(j, 1);

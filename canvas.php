@@ -60,7 +60,17 @@
     
     // List all the sections in the course
     function list_sections() {
-        $result = call_canvas_url("GET", "sections", array("include[]" => "students"));
+		$result = array();
+		$data = array(
+			"include[]" => "students",
+			"per_page" => "10",
+			"page" => 1
+		);
+		while (count($result) % 10 == 0) {
+			$returned = call_canvas_url("GET", "sections", $data);
+			$result = array_merge($result, $returned);
+			$data["page"] += 1;
+		}
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
