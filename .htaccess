@@ -1,2 +1,5 @@
-AuthType UWNetID
-require valid-user
+AuthType Shibboleth
+ShibCompatWith24 on 
+ShibRequireSession on
+ShibRequestSetting redirectToSSL 443
+require shib-session
