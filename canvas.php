@@ -54,10 +54,13 @@
 			$returned = call_canvas_url("GET", "users", $data);
 			$result = array_merge($result, $returned);
 			$data["page"] += 1;
+			if (count($returned) == 0) {
+				break;
+			}
 		}
 	    echo json_encode($result, JSON_PRETTY_PRINT);
 	}
-    
+
     // List all the sections in the course
     function list_sections() {
 		$result = array();
@@ -70,6 +73,9 @@
 			$returned = call_canvas_url("GET", "sections", $data);
 			$result = array_merge($result, $returned);
 			$data["page"] += 1;
+			if (count($returned) == 0) {
+				break;
+			}
 		}
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
@@ -85,6 +91,9 @@
 			$returned = call_canvas_url("GET", "assignments", $data);
 			$result = array_merge($result, $returned);
 			$data["page"] += 1;
+			if (count($returned) == 0) {
+				break;
+			}
 		}
 	    echo json_encode($result, JSON_PRETTY_PRINT);
 	}
