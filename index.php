@@ -1,5 +1,6 @@
 <?php
-  include("config.php");
+  include_once("config.php");
+  include_once("common.php");
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +55,7 @@
     </nav>
 
     <main>
-      <h1>Welcome <strong><?=$_SERVER["REMOTE_USER"]?></strong>,<br>Select a session, enter the password, and hit <em>SIGN ME IN</em>!</h1>
+      <h1>Welcome <strong><?=get_remote_user()?></strong>,<br>Select a session, enter the password, and hit <em>SIGN ME IN</em>!</h1>
       <div class="row">
         <div class="col s12">
 
@@ -91,7 +92,7 @@
       </div>
 
       <?php
-        if (in_array($_SERVER["REMOTE_USER"], $admins)) {
+        if (in_array(get_remote_user(), $admins)) {
           include("admin.php");
         }
       ?>
@@ -161,7 +162,7 @@
         });
         return funct.promise();
       }
-      
+
       function canvas_list_sections() {
         var url = "canvas.php?action=list_sections";
         var funct = $.ajax({
@@ -218,7 +219,7 @@
           });
         });
 
-        const adminEnabled = <?php if (in_array($_SERVER["REMOTE_USER"], $admins)) {echo "true";} else {echo "false";} ?>;
+        const adminEnabled = <?php if (in_array(get_remote_user(), $admins)) {echo "true";} else {echo "false";} ?>;
 
         if (adminEnabled) {
           var signedInNetIDs = [];

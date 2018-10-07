@@ -2,7 +2,7 @@
 	/*
 		Interacts with the Canvas API to carry out automated tasks to the gradebook
 	*/
-	include("common.php");
+	include_once("common.php");
 	require_administrator();
 
 	if (!isset($_GET["action"])) {

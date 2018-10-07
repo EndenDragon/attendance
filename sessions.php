@@ -2,7 +2,7 @@
   /*
     Get list of signed in members
   */
-  include("common.php");
+  include_once("common.php");
   require_administrator();
 
   if (!isset($_GET["session"])) {

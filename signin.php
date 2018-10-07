@@ -2,7 +2,7 @@
   /*
     Signs in the user
   */
-  include("common.php");
+  include_once("common.php");
 
   if (!isset($_POST["session"])) {
     die_and_error("session parameter is missing");
@@ -13,7 +13,7 @@
 
   $session = $_POST["session"];
   $password = $_POST["password"];
-  $uwnetid = $_SERVER["REMOTE_USER"];
+  $uwnetid = get_remote_user();
 
   $sql_query = "SELECT identifier, password, start, end FROM sessions WHERE identifier = :session";
   $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -45,7 +45,7 @@
   if (!($start <= $now && $now <= $end)) {
     die_and_error("Attendance for $session is closed.");
   }
-  
+
   $sql_query = "SELECT id FROM records WHERE netid = :uwnetid AND session = :session";
   $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
   $sql_query->execute(array(":uwnetid" => $uwnetid, ":session" => $session));
@@ -57,11 +57,11 @@
       ];
       $data[]= $id_row;
   }
-  
+
   if (sizeof($data) > 0) {
       die_and_error("You have already signed in.");
   }
-  
+
   $sql_query = "INSERT INTO records (netid, session, timestamp) VALUES (:uwnetid, :session, :now)";
   $sql_query = $database->prepare($sql_query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
   $sql_query->execute(array(":uwnetid"=>$uwnetid, ":session"=>$session, ":now"=>$now));

@@ -2,7 +2,7 @@
   /*
     Add or edit sessions
   */
-  include("common.php");
+  include_once("common.php");
   require_administrator();
 
   if (!isset($_POST["name"])) {
