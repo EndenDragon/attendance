@@ -119,22 +119,24 @@
 
 	function call_canvas_url($method, $url_path = "", $data = array()) {
 		global $canvas_access_token, $api_url_base;
-		$curl = curl_init();
-		if ($method == "POST") {
-			curl_setopt($curl, CURLOPT_POST, 1);
-		}
+
 		$url = $api_url_base . $url_path . "?access_token=" . $canvas_access_token;
 		foreach ($data as $key => $value) {
 			$url .= "&" . $key . "=" . $value;
 		}
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		$result = curl_exec($curl);
-		$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-		curl_close($curl);
-		if ($httpcode < 200 && $httpcode >= 300) {
-			die_and_error("canvas curl error! threw a " . $httpcode);
+
+		$options = array(
+			'http' => array('method' => "{$method}")
+		);
+		$context = stream_context_create($options);
+
+		$json_response = file_get_contents($url, false, $context);
+
+		if ($json_response === FALSE){
+			$result = FALSE;
+		} else {
+			$result = json_decode($json_response);
 		}
-		return json_decode($result);
+		return $result;
 	}
 ?>
