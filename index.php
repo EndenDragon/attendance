@@ -208,6 +208,7 @@
         });
 
         $("#sign-in-btn").click(function () {
+          $("#sign-in-btn").attr("disabled", true);
           var session = $('#session-select').find(":selected").val();
           var password = $("#password-field").val();
           var signin = signin_submit(session, password);
@@ -216,6 +217,9 @@
           });
           signin.fail(function (data) {
             Materialize.toast('Error: ' + data.responseJSON.error, 10000);
+          });
+          signin.always(function () {
+            $("#sign-in-btn").attr("disabled", false);
           });
         });
 
