@@ -12,7 +12,7 @@
           $sql_query = "SELECT identifier FROM sessions;";
           $result_set = $database->query($sql_query);
           foreach ($result_set as $row) {
-            $identifier = $row["identifier"];
+            $identifier = htmlspecialchars($row["identifier"]);
             echo "<option value=\"$identifier\">$identifier</option>";
           }
         ?>
@@ -86,10 +86,10 @@
         $sql_query = "SELECT identifier, password, start, end FROM sessions;";
         $result_set = $database->query($sql_query);
         foreach ($result_set as $row) {
-          $identifier = $row["identifier"];
-          $password = $row["password"];
-          $start = $row["start"];
-          $end = $row["end"];
+          $identifier = htmlspecialchars($row["identifier"]);
+          $password = htmlspecialchars($row["password"]);
+          $start = htmlspecialchars($row["start"]);
+          $end = htmlspecialchars($row["end"]);
           echo "<tr> <td>$identifier</td> <td>$password</td> <td>$start</td> <td>$end</td> </tr>";
         }
       ?>

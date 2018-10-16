@@ -69,7 +69,7 @@
                   $start = $row["start"];
                   $end = $row["end"];
                   $now = date('Y-m-d H:i:s');
-                  $identifier = $row["identifier"];
+                  $identifier = htmlspecialchars($row["identifier"]);
                   if ($start <= $now && $now <= $end) {
                     echo "<option value=\"$identifier\">$identifier</option>";
                   }
