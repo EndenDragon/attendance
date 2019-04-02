@@ -9,7 +9,7 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" integrity="sha256-OweaP/Ic6rsV+lysfyS4h+LM6sRwuO3euTYfr6M124g=" crossorigin="anonymous" />
 
     <style>
       .brand-logo {
@@ -107,7 +107,7 @@
     </footer>
     <!--Import jQuery before materialize.js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" integrity="sha256-U/cHDMTIHCeMcvehBv1xQ052bPSbJtbuiw4QA9cTKz0=" crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js" integrity="sha256-iaqfO5ue0VbSGcEiQn+OeXxnxAMK2+QgHXIDA5bWtGI=" crossorigin="anonymous"></script>
 
     <script>
@@ -185,26 +185,37 @@
       }
 
       $(document).ready(function() {
-        $('select').material_select();
+        $('select').formSelect();
         $('.modal').modal();
-        $('.datepicker').pickadate({
+        $('.datepicker').datepicker({
           selectMonths: true, // Creates a dropdown to control month
           selectYears: 15, // Creates a dropdown of 15 years to control year,
           today: 'Today',
           clear: 'Clear',
           close: 'Ok',
+          i18n : {
+            clear: "Clear",
+            done: "OK",
+            cancel: "Cancel",
+          },
+          format: "d mmmm, yyyy",
           closeOnSelect: false // Close upon selecting a date,
         });
-        $('.timepicker').pickatime({
-          default: 'now', // Set default time: 'now', '1:30AM', '16:30'
-          fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-          twelvehour: false, // Use AM/PM or 24-hour format
+        $('.timepicker').timepicker({
+          defaultTime: 'now', // Set default time: 'now', '1:30AM', '16:30'
+          fromNow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+          twelveHour: false, // Use AM/PM or 24-hour format
           donetext: 'OK', // text for done-button
           cleartext: 'Clear', // text for clear-button
           canceltext: 'Cancel', // Text for cancel-button
-          autoclose: false, // automatic close timepicker
+          autoClose: false, // automatic close timepicker
           ampmclickable: true, // make AM PM clickable
-          aftershow: function(){} //Function for after opening timepicker
+          aftershow: function(){}, //Function for after opening timepicker
+          i18n: {
+            clear: "Clear",
+            done: "OK",
+            cancel: "Cancel"
+          }
         });
 
         $("#sign-in-btn").click(function () {
@@ -213,10 +224,10 @@
           var password = $("#password-field").val();
           var signin = signin_submit(session, password);
           signin.done(function () {
-            Materialize.toast('Successfully signed in!', 10000);
+            M.toast({html: 'Successfully signed in!', displayLength: 10000});
           });
           signin.fail(function (data) {
-            Materialize.toast('Error: ' + data.responseJSON.error, 10000);
+            M.toast({html: 'Error: ' + data.responseJSON.error, displayLength: 10000});
           });
           signin.always(function () {
             $("#sign-in-btn").attr("disabled", false);
@@ -335,10 +346,10 @@
               }
               var postCanvasGradesAjax = canvas_post_grade(assignmentID, result);
               postCanvasGradesAjax.done(function () {
-                Materialize.toast('Successfully submitted attendance to Canvas!', 10000);
+                M.toast({html: 'Successfully submitted attendance to Canvas!', displayLength: 10000});
               });
               postCanvasGradesAjax.fail(function (data) {
-                Materialize.toast('Error: ' + data.responseJSON.error, 10000);
+                M.toast({html: 'Error: ' + data.responseJSON.error, displayLength: 10000});
               });
             }
 
@@ -361,7 +372,7 @@
                   var rendered = Mustache.render(template, disdata);
                   $("#canvas-submit-assignments-list").append(rendered);
                 }
-                $('select').material_select();
+                $('select').formSelect();
                 $("#loading-course-msg").hide();
               });
               var listCourseStudentsAjax = canvas_list_users();
@@ -389,7 +400,7 @@
                         var rendered = Mustache.render(template, dissec);
                         $("#canvas-submit-sections-list").append(rendered);
                     }
-                    $('select').material_select();
+                    $('select').formSelect();
                 });
               });
             }

@@ -37,6 +37,7 @@
   </div>
   <div class="col s12">
     <p class="flow-text">Add or edit sessions</p>
+    <p>Note: Start & End times are running on <a href="http://militarytimechart.com/" target="_blank">24 hours</a>.</p>
   </div>
   <div class="col s12">
     <div class="input-field col s12 m6">
