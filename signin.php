@@ -35,6 +35,28 @@
   }
 
   $data = $data[0];
+
+  if (substr($data["identifier"], 0, 6) == "debug_") {
+    $expected = $data["password"];
+    $expected_ascii = implode(",", unpack("C*", $expected));
+    $got = $password;
+    $got_ascii = implode(",", unpack("C*", $got));
+
+    $msg = "Expected password to be (" . $expected . ") [" . $expected_ascii . "]. Got (" . $got . ") [" . $got_ascii . "].";
+
+    if ($expected != $got) {
+      $msg = $msg . " Password is different/incorrect and is rejected by the server.";
+    } else {
+      $msg = $msg . " Password is same/correct and is accepted by the server.";
+    }
+
+    $msg = $msg . " NetID[" . $uwnetid . "]";
+
+    file_put_contents('debug.log', $msg . "\n", FILE_APPEND);
+    die_and_error($msg);
+  }
+
+
   if ($data["password"] != $password) {
     die_and_error("Password is incorrect.");
   }
